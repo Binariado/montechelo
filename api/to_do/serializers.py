@@ -5,9 +5,13 @@ from .models import ToDo
 class ToDoSerializer(serializers.ModelSerializer):
 
     def validate_title(self, value):
-        # Validar que el título es único por usuario
+        # Obtener el usuario actual del contexto de la solicitud
         user = self.context['request'].user
-        if ToDo.objects.filter(title=value, user=user).exists():
+
+        # Verificar si ya existe un ToDo con el mismo título y usuario, excluyendo el actual
+        to_do_instance = self.instance  # Esto obtiene el objeto actual, si está en modo de actualización
+        if ToDo.objects.filter(title=value, user=user).exclude(
+                uuid=to_do_instance.uuid if to_do_instance else None).exists():
             raise serializers.ValidationError("Ya existe una tarea con este título para el usuario actual.")
         return value
 
