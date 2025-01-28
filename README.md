@@ -2,17 +2,14 @@
 
 ## Help
 
-### Run Start
+### Config Env
 
 #### Start dev
 ```shell
-docker compose build && docker compose up
+copy .env.example .env
 ```
 
-#### Start Production
-```shell
-sh deploy
-```
+### Run Start
 
 ### Migrations
 
@@ -24,6 +21,16 @@ docker compose run --rm montechelo python manage.py makemigrations
 #### Run migrate
 ```shell
 docker compose run --rm montechelo python manage.py migrate
+```
+
+#### Start dev
+```shell
+docker compose build && docker compose up
+```
+
+#### Start Production
+```shell
+sh deploy
 ```
 
 #### Create trigger
