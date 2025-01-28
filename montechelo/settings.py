@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
+from datetime import timedelta
 
 import environ
 import os
@@ -54,9 +55,14 @@ DJANGO_APPS  = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework_simplejwt'
 ]
 
-LOCAL_APPS = []
+LOCAL_APPS = [
+    'api.to_do',
+    'api.account'
+]
 
 INSTALLED_APPS = (DJANGO_APPS + LOCAL_APPS)
 
@@ -69,6 +75,27 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+SIMPLE_JWT = {
+    'USER_ID_FIELD': 'uuid',
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),  # Access token validity
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),  # Refresh token validity
+    'ROTATE_REFRESH_TOKENS': True,  # Rotate refresh tokens on refresh
+    'BLACKLIST_AFTER_ROTATION': True,  # Blacklist old tokens after rotation
+    'AUTH_HEADER_TYPES': ('Bearer',),  # Header type for JWT tokens
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+}
+
+AUTH_USER_MODEL = 'account.User'
+
 
 ROOT_URLCONF = 'montechelo.urls'
 
@@ -125,6 +152,15 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+# Configuration for sending emails
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'  # Ejemplo para Gmail
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = 'tu-correo@gmail.com'
+# EMAIL_HOST_PASSWORD = 'tu-contraseña'  # No hardcodees contraseñas en producción
+# DEFAULT_FROM_EMAIL = 'TuNombre <tu-correo@gmail.com>'
 
 
 # Internationalization
