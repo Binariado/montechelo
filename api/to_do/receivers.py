@@ -9,5 +9,5 @@ from api.to_do.tasks import send_task_completed_notification
 def trigger_notification_on_completion(sender, instance, created, **kwargs):
     if not created and instance.is_completed:
         # Llamar a la tarea de Celery
-        send_task_completed_notification.delay(instance.id)
+        send_task_completed_notification.delay(instance.uuid)
 

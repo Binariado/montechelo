@@ -1,4 +1,4 @@
-from celery import shared_task
+from montechelo.celery import celery_app
 # from django.core.mail import send_mail
 # from django.conf import settings
 from api.to_do.models import ToDo
@@ -26,10 +26,10 @@ logger = logging.getLogger(__name__)
 #
 
 
-@shared_task
+@celery_app.task
 def send_task_completed_notification(todo_id):
     try:
-        todo = ToDo.objects.get(id=todo_id)
+        todo = ToDo.objects.get(uuid=todo_id)
         logger.info(f"Notificación: Tarea '{todo.title}' completada por el usuario {todo.user.username}.")
     except ToDo.DoesNotExist:
         logger.error(f"No se encontró la tarea con ID: {todo_id}.")
